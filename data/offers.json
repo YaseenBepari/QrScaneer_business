@@ -1,0 +1,29 @@
+{
+  "tokens": [
+    {
+      "id": "bd6b3432-d72e-4ab9-b552-c2cf7ae6bf73",
+      "token": "487dbb78-47f0-47f9-ae0d-76cf8c7cbbb4",
+      "createdAt": "2026-03-11T02:10:36.464Z",
+      "maxUses": 1,
+      "useCount": 0
+    },
+    {
+      "id": "c7c7ce48-2fa7-47d2-b8e1-bf413fb7b49a",
+      "token": "2ce29182-adaa-4a2a-84c0-55668e20d108",
+      "createdAt": "2026-03-11T02:14:29.317Z",
+      "maxUses": 1,
+      "useCount": 0
+    }
+  ],
+  "claims": [
+    {
+      "id": "db04b384-187c-4235-9991-fa7c73226c9e",
+      "token": "8c041ee8-716f-48b6-8112-6a6c6c8838f7",
+      "name": "Yaseen Dadapeer Bepari",
+      "mobile": "8763423532",
+      "fingerprint": "ea6e3f5dc72",
+      "ip": "::1",
+      "claimedAt": "2026-03-11T02:09:20.572Z"
+    }
+  ]
+}

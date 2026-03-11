@@ -1,0 +1,139 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #ffecd2, #fcb69f);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 350px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+h1 {
+  color: #ff7043;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Security badge */
+.security-badge {
+  display: inline-block;
+  background: rgba(255, 112, 67, 0.1);
+  color: #ff7043;
+  border: 1px solid rgba(255, 112, 67, 0.3);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+
+/* Invalid token error box */
+.error-box {
+  background: #fff3e0;
+  border: 2px solid #ffcc80;
+  border-radius: 12px;
+  padding: 24px 16px;
+  color: #e65100;
+  margin: 10px 0;
+}
+.error-box .error-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 10px;
+}
+.error-box p {
+  margin: 4px 0;
+  font-weight: 500;
+}
+.error-box .small {
+  font-size: 12px;
+  color: #bf360c;
+  font-weight: 400;
+  margin-top: 8px;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ff7043;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #f4511e;
+  box-shadow: 0 0 8px rgba(244, 81, 30, 0.5);
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover:not(:disabled) {
+  background: #f4511e;
+  transform: scale(1.05);
+}
+
+button:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

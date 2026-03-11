@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — QR Offer Manager</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      color: #e0e0e0;
+      padding: 30px 20px;
+    }
+    h1 { color: #ff7043; margin-bottom: 6px; font-size: 1.8rem; }
+    .subtitle { color: #9e9e9e; margin-bottom: 30px; font-size: 0.9rem; }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,112,67,0.2);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .card h2 { color: #ff7043; margin-bottom: 16px; font-size: 1.1rem; letter-spacing: 0.5px; }
+    label { display: block; margin-bottom: 6px; color: #bdbdbd; font-size: 0.85rem; }
+    input[type="text"], input[type="number"], input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,112,67,0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #ff7043; }
+    button {
+      background: #ff7043;
+      color: white;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    button:hover { background: #f4511e; transform: scale(1.03); }
+    button:disabled { background: #555; cursor: not-allowed; transform: none; }
+
+    /* QR result */
+    #qrResult { margin-top: 20px; display: none; text-align: center; }
+    #qrResult img { width: 200px; height: 200px; border-radius: 12px; border: 3px solid #ff7043; }
+    #qrUrl {
+      display: block;
+      margin-top: 10px;
+      color: #81d4fa;
+      word-break: break-all;
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .copy-btn { margin-top: 10px; font-size: 0.8rem; padding: 7px 16px; }
+
+    /* Stats */
+    .stats { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .stat-card {
+      flex: 1;
+      min-width: 120px;
+      background: rgba(255,112,67,0.1);
+      border: 1px solid rgba(255,112,67,0.25);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .num { font-size: 2rem; font-weight: bold; color: #ff7043; }
+    .stat-card .lbl { font-size: 0.75rem; color: #9e9e9e; margin-top: 4px; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { background: rgba(255,112,67,0.15); color: #ff7043; padding: 10px 8px; text-align: left; }
+    td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.06); color: #ccc; }
+    tr:hover td { background: rgba(255,255,255,0.03); }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+    }
+    .badge-ok { background: rgba(76,175,80,0.2); color: #81c784; }
+    .badge-full { background: rgba(244,67,54,0.2); color: #e57373; }
+    .revoke-btn {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      background: rgba(244,67,54,0.2);
+      color: #ef9a9a;
+      border: 1px solid rgba(244,67,54,0.3);
+    }
+    .revoke-btn:hover { background: rgba(244,67,54,0.4); transform: none; }
+    #statusMsg { margin-top: 12px; font-size: 0.9rem; min-height: 20px; }
+    .success { color: #81c784; }
+    .error-msg { color: #e57373; }
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #9e9e9e;
+      margin-bottom: 14px;
+    }
+    .empty { color: #616161; font-style: italic; text-align: center; padding: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>🔧 Admin Panel</h1>
+  <p class="subtitle">QR Offer Manager — Pani Puri Campaign</p>
+
+  <!-- Auth card -->
+  <div class="card" id="authCard">
+    <h2>🔑 Admin Login</h2>
+    <label>Admin Key</label>
+    <input type="password" id="adminKey" placeholder="Enter admin key..." autocomplete="off">
+    <button onclick="loadDashboard()">Unlock Dashboard</button>
+    <p id="authError" class="error-msg" style="margin-top:10px"></p>
+  </div>
+
+  <!-- Dashboard (hidden until auth) -->
+  <div id="dashboard" style="display:none">
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="statTokens">—</div>
+        <div class="lbl">QR Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statClaims">—</div>
+        <div class="lbl">Claims</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statToday">—</div>
+        <div class="lbl">Today</div>
+      </div>
+    </div>
+
+    <!-- Generate QR Token -->
+    <div class="card">
+      <h2>➕ Generate QR Token</h2>
+      <label>Max Claims for this QR</label>
+      <input type="number" id="maxUses" value="1" min="1" max="1000">
+      <label>Base URL (where your site is hosted)</label>
+      <input type="text" id="baseUrl" value="http://localhost:5173">
+      <button id="generateBtn" onclick="generateToken()">🎫 Generate QR Code</button>
+
+      <div id="qrResult">
+        <img id="qrImg" src="" alt="QR Code">
+        <a id="qrUrl" href="#" target="_blank"></a>
+        <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
+      </div>
+      <p id="statusMsg"></p>
+    </div>
+
+    <!-- Tokens Table -->
+    <div class="card">
+      <h2>🎫 Active Tokens</h2>
+      <div id="tokenTableWrap"><p class="empty">Loading...</p></div>
+    </div>
+
+    <!-- Claims Table -->
+    <div class="card">
+      <h2>📋 All Claims</h2>
+      <div id="claimsTableWrap"><p class="empty">Loading...</p></div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    const API = 'http://localhost:4000';
+    let adminKey = '';
+
+    window.loadDashboard = async function() {
+      adminKey = document.getElementById('adminKey').value.trim();
+      if (!adminKey) return;
+
+      try {
+        const res = await fetch(`${API}/api/admin/claims`, {
+          headers: { 'x-admin-key': adminKey }
+        });
+        if (!res.ok) {
+          document.getElementById('authError').textContent = '❌ Invalid admin key.';
+          return;
+        }
+        document.getElementById('authCard').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        await refreshData();
+      } catch (e) {
+        document.getElementById('authError').textContent = '❌ Cannot connect to server.';
+      }
+    };
+
+    async function refreshData() {
+      const res = await fetch(`${API}/api/admin/claims`, {
+        headers: { 'x-admin-key': adminKey }
+      });
+      const data = await res.json();
+      renderStats(data);
+      renderTokens(data.tokens);
+      renderClaims(data.claims);
+    }
+
+    function renderStats({ tokens, claims }) {
+      document.getElementById('statTokens').textContent = tokens.length;
+      document.getElementById('statClaims').textContent = claims.length;
+      const today = new Date().toISOString().slice(0, 10);
+      const todayCount = claims.filter(c => c.claimedAt.startsWith(today)).length;
+      document.getElementById('statToday').textContent = todayCount;
+    }
+
+    function renderTokens(tokens) {
+      if (!tokens.length) {
+        document.getElementById('tokenTableWrap').innerHTML = '<p class="empty">No tokens yet. Generate one above.</p>';
+        return;
+      }
+      const rows = tokens.map(t => {
+        const full = t.useCount >= t.maxUses;
+        return `<tr>
+          <td style="font-family:monospace;font-size:0.75rem">${t.token.slice(0,8)}…</td>
+          <td>${t.useCount} / ${t.maxUses} <span class="badge ${full ? 'badge-full' : 'badge-ok'}">${full ? 'Full' : 'Active'}</span></td>
+          <td>${new Date(t.createdAt).toLocaleString()}</td>
+          <td><button class="revoke-btn" onclick="revokeToken('${t.token}')">Revoke</button></td>
+        </tr>`;
+      }).join('');
+      document.getElementById('tokenTableWrap').innerHTML = `
+        <table>
+          <thead><tr><th>Token</th><th>Uses</th><th>Created</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    function renderClaims(claims) {
+      if (!claims.length) {
+        document.getElementById('claimsTableWrap').innerHTML = '<p class="empty">No claims yet.</p>';
+        return;
+      }
+      const rows = [...claims].reverse().map(c => `<tr>
+        <td>${c.name}</td>
+        <td>${c.mobile}</td>
+        <td>${c.ip}</td>
+        <td>${new Date(c.claimedAt).toLocaleString()}</td>
+        <td style="font-family:monospace;font-size:0.7rem">${c.fingerprint}</td>
+      </tr>`).join('');
+      document.getElementById('claimsTableWrap').innerHTML = `
+        <table>
+          <thead><tr><th>Name</th><th>Mobile</th><th>IP</th><th>Claimed At</th><th>Device ID</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    window.generateToken = async function() {
+      const maxUses = parseInt(document.getElementById('maxUses').value) || 1;
+      const baseUrl = document.getElementById('baseUrl').value.trim() || 'http://localhost:5173';
+      const btn = document.getElementById('generateBtn');
+      const statusMsg = document.getElementById('statusMsg');
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+      statusMsg.textContent = '';
+
+      try {
+        const res = await fetch(`${API}/api/admin/generate-token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+          body: JSON.stringify({ maxUses, baseUrl })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
+
+        document.getElementById('qrImg').src = data.qrCode;
+        document.getElementById('qrUrl').textContent = data.claimUrl;
+        document.getElementById('qrUrl').href = data.claimUrl;
+        document.getElementById('qrResult').style.display = 'block';
+        statusMsg.className = 'success';
+        statusMsg.textContent = `✅ Token created! Max ${maxUses} claim(s).`;
+        await refreshData();
+      } catch (err) {
+        statusMsg.className = 'error-msg';
+        statusMsg.textContent = '❌ ' + err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🎫 Generate QR Code';
+      }
+    };
+
+    window.revokeToken = async function(token) {
+      if (!confirm('Revoke this token? Claims already made will remain on record.')) return;
+      await fetch(`${API}/api/admin/tokens/${token}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-key': adminKey }
+      });
+      await refreshData();
+    };
+
+    window.copyUrl = function() {
+      const url = document.getElementById('qrUrl').textContent;
+      navigator.clipboard.writeText(url).then(() => alert('URL copied!'));
+    };
+  </script>
+
+</body>
+</html>
