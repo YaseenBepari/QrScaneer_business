@@ -249,9 +249,9 @@
 
       <!-- Generate QR Token -->
       <div class="card">
-        <h2>➕ Generate QR Token</h2>
-        <label>Max Claims for this QR</label>
-        <input type="number" id="maxUses" value="1" min="1" max="1000">
+        <h2>➕ Generate Global QR Token</h2>
+        <label>Max Claims for this QR (e.g., 10000 for a printed sign)</label>
+        <input type="number" id="maxUses" value="10000" min="1" max="100000">
         <label>Base URL (where your site is hosted)</label>
         <input type="text" id="baseUrl" value="https://panipuri.onrender.com">
         <button id="generateBtn" onclick="generateToken()">🎫 Generate QR Code</button>

@@ -153,7 +153,7 @@ function requireAdmin(req, res, next) {
  * Returns the token and a base64 QR code image.
  */
 app.post('/api/admin/generate-token', requireAdmin, async (req, res) => {
-  const maxUses = parseInt(req.body.maxUses) || 1;
+  const maxUses = parseInt(req.body.maxUses) || 10000;
   const token = uuidv4();
 
   // The URL that the QR code will point to (Vite dev server)
