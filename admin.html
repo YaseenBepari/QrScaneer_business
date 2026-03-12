@@ -195,6 +195,27 @@
       border-top: 1px solid rgba(255,255,255,0.04);
       color: #444; font-size: 0.8rem;
     }
+
+    /* ---- MOBILE OVERRIDES ---- */
+    @media (max-width: 600px) {
+      .navbar { padding: 12px 16px; }
+      .brand-name { font-size: 1rem; }
+      .nav-links { gap: 4px; }
+      .nav-badge { padding: 5px 10px; font-size: 0.75rem; }
+      .admin-body { padding: 20px 14px 40px; }
+      .card { padding: 20px 16px; }
+      
+      /* Make tables scrollable horizontally without breaking the page layout */
+      #tokenTableWrap, #claimsTableWrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,112,67,0.1);
+      }
+      th, td { white-space: nowrap; padding: 10px 14px; }
+    }
   </style>
 </head>
 <body>
