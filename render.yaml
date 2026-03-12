@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: qrscanner-business
+    runtime: node
+    region: singapore        # closest to India
+    plan: free
+    buildCommand: npm install && npm run build   # installs deps + builds Vite frontend into dist/
+    startCommand: node server/index.js           # Express serves dist/ + /api routes
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_KEY
+        sync: false          # ⚠️ Set this manually in the Render dashboard (keep it secret!)

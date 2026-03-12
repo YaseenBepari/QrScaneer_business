@@ -1,4 +1,7 @@
 // server/index.js — Express backend with 4 security layers
+import 'dotenv/config';   // loads .env in local dev (no-op on Render where env vars are set via dashboard)
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import express from 'express';
 import cors from 'cors';
 import { rateLimit } from 'express-rate-limit';
@@ -7,14 +10,19 @@ import QRCode from 'qrcode';
 import db from './db.js';
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
-// Admin key — change this in production!
+// Admin key — loaded from env (set in Render dashboard for production)
 const ADMIN_KEY = process.env.ADMIN_KEY || 'admin-secret-2024';
+
+// CORS — origins loaded from ALLOWED_ORIGINS env var (comma-separated)
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173,http://localhost:4173')
+  .split(',')
+  .map(o => o.trim());
 
 // --- Middleware ---
 app.use(express.json());
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:4173'] }));
+app.use(cors({ origin: allowedOrigins }));
 
 // Trust proxy to get real IPs (important behind Nginx/Vite proxy)
 app.set('trust proxy', 1);
@@ -207,9 +215,22 @@ app.delete('/api/admin/tokens/:token', requireAdmin, async (req, res) => {
   return res.status(404).json({ error: 'NOT_FOUND', message: 'Token not found.' });
 });
 
+// ── Serve Vite frontend (production) ────────────────────────────────────────
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const distDir = join(__dirname, '..', 'dist');
+
+// Serve static files (JS, CSS, images, etc.)
+app.use(express.static(distDir));
+
+// Catch-all: serve index.html for any non-API route (SPA fallback)
+app.get('*', (req, res) => {
+  res.sendFile(join(distDir, 'index.html'));
+});
+
 // ── Start Server ────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n🚀 QR Scanner API running at http://localhost:${PORT}`);
-  console.log(`🔑 Admin key: ${ADMIN_KEY}`);
-  console.log(`📋 Admin panel: http://localhost:5173/admin.html\n`);
+  console.log(`\n🚀 QR Scanner running on port ${PORT}`);
+  console.log(`🔑 Admin key loaded from env: ${ADMIN_KEY ? 'YES' : 'NO (using default!)'}`);
+  console.log(`🌐 Allowed CORS origins: ${allowedOrigins.join(', ')}`);
+  console.log(`📋 Admin panel: /admin.html\n`);
 });

@@ -4,45 +4,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pani Puri Free Plate Offer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 Claim Your Free Pani Puri!</h1>
-    <p class="subtitle">First-time users only — one plate per phone</p>
 
-    <!-- Shown when no valid QR token is in the URL -->
-    <div id="invalidToken" style="display:none">
-      <div class="error-box">
-        <span class="error-icon">🚫</span>
-        <p>Invalid or missing QR code.</p>
-        <p class="small">Please scan the QR code at the counter to claim your free plate.</p>
-      </div>
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🍡</span>
+      <span class="brand-name">PaniPuri Biz</span>
     </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active">🏠 Home</a></li>
+      <li><a href="#about" class="nav-link">ℹ️ About</a></li>
+      <li><a href="#contact" class="nav-link">📞 Contact</a></li>
+      <li><a href="admin.html" class="nav-link nav-admin">🔐 Login as Admin</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleNav()">☰</button>
+  </nav>
 
-    <!-- Shown when a valid token is present -->
-    <form id="offerForm" style="display:none">
-      <div class="security-badge">🔒 Secured Offer</div>
-
-      <div class="form-group">
-        <label for="name">👤 Name:</label>
-        <input type="text" id="name" placeholder="Enter your name" required>
-      </div>
-
-      <div class="form-group">
-        <label for="mobile">📱 Mobile Number:</label>
-        <input type="tel" id="mobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
-      </div>
-
-      <button type="submit" id="submitBtn">
-        <span id="btnText">🍽 Claim Offer</span>
-        <span id="btnLoader" style="display:none">⏳ Verifying...</span>
-      </button>
-    </form>
-
-    <p id="message"></p>
+  <!-- ========== HERO SECTION ========== -->
+  <div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">🎉 Claim Your Free Pani Puri!</h1>
+      <p class="hero-subtitle">First-time users only — scan the QR code at our counter to get your complimentary plate!</p>
+    </div>
   </div>
 
+  <!-- ========== MAIN CONTAINER ========== -->
+  <main class="main-wrapper">
+    <div class="container">
+      <h1>🎉 Claim Your Free Pani Puri!</h1>
+      <p class="subtitle">First-time users only — one plate per phone</p>
+
+      <!-- Shown when no valid QR token is in the URL -->
+      <div id="invalidToken" style="display:none">
+        <div class="error-box">
+          <span class="error-icon">🚫</span>
+          <p>Invalid or missing QR code.</p>
+          <p class="small">Please scan the QR code at the counter to claim your free plate.</p>
+        </div>
+      </div>
+
+      <!-- Shown when a valid token is present -->
+      <form id="offerForm" style="display:none">
+        <div class="security-badge">🔒 Secured Offer</div>
+
+        <div class="form-group">
+          <label for="name">👤 Name:</label>
+          <input type="text" id="name" placeholder="Enter your name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="mobile">📱 Mobile Number:</label>
+          <input type="tel" id="mobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+        </div>
+
+        <button type="submit" id="submitBtn">
+          <span id="btnText">🍽 Claim Offer</span>
+          <span id="btnLoader" style="display:none">⏳ Verifying...</span>
+        </button>
+      </form>
+
+      <p id="message"></p>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="footer-logo">🍡 PaniPuri Biz</span>
+        <p class="footer-tagline">Authentic flavors, one puri at a time.</p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="#about">ℹ️ About Us</a></li>
+          <li><a href="#contact">📞 Contact</a></li>
+          <li><a href="admin.html">🔐 Admin Panel</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Offer Info</h4>
+        <ul>
+          <li><a href="#">🎁 Free Plate Terms</a></li>
+          <li><a href="#">📜 Privacy Policy</a></li>
+          <li><a href="#">❓ How It Works</a></li>
+          <li><a href="#">📸 QR Code Guide</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>📍 Near Main Market, City Center</p>
+        <p>📞 +91 98765 43210</p>
+        <p>📧 hello@panipuribiz.com</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn">📘 Facebook</a>
+          <a href="#" class="social-btn">📸 Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 PaniPuri Biz. All rights reserved. Made with ❤️ for street food lovers.</p>
+    </div>
+  </footer>
+
   <script src="script.js" type="module"></script>
+
+  <script>
+    function toggleNav() {
+      const navLinks = document.querySelector('.nav-links');
+      navLinks.classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

@@ -1,6 +1,5 @@
-// script.js — Frontend with device fingerprinting + secure API call
-
-// Empty string = use same host (Vite proxies /api → Express on port 4000)
+// Same-origin: frontend is served by the same Express server on Render
+// so relative URLs like /api/... work perfectly.
 const API_BASE = '';
 
 // ── Device Fingerprint ─────────────────────────────────────────────────────
